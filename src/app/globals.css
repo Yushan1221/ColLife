@@ -6,6 +6,14 @@
 
   --test: #e0b977;
 
+  --color-primary: #A9B388;
+  --color-primary-hover: #9ba57b;
+
+  --color-border: #776B5D;
+
+  --color-muted: #B99470;
+  --color-muted-light: #EBE3D5;
+
 }
 
 @theme inline {

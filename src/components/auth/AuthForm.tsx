@@ -86,7 +86,7 @@ export default function LoginForm() {
           type="button"
           onClick={() => setIsRegistering(false)}
           className={`
-            px-10 py-2 rounded-l-xl font-bold text-lg cursor-pointer transition duration-300 border-dashed border-1
+            px-10 py-2 rounded-l-xl font-bold text-lg cursor-pointer transition duration-300 border-dashed border
             ${!isRegistering ? "bg-background shadow-md border-border" : "text-muted border-muted-light"}
           `}
         >
@@ -96,7 +96,7 @@ export default function LoginForm() {
           type="button"
           onClick={() => setIsRegistering(true)}
           className={`
-            px-10 py-2 rounded-r-xl font-bold text-lg cursor-pointer transition duration-300 border-dashed border-1
+            px-10 py-2 rounded-r-xl font-bold text-lg cursor-pointer transition duration-300 border-dashed border
             ${isRegistering ? "bg-background shadow-md border-border " : "text-muted border-muted-light"}
           `}
         >
@@ -109,7 +109,7 @@ export default function LoginForm() {
         onSubmit={handleSubmit}
       >
         <div className="w-full flex bg-muted-light rounded-xl overflow-hidden">
-          <div className="px-5 py-3 bg-background rounded-l-xl border-dashed border-1 border-border">
+          <div className="px-5 py-3 bg-background rounded-l-xl border-dashed border border-border">
             <MailIcon />
           </div>
           <input
@@ -122,14 +122,14 @@ export default function LoginForm() {
         </div>
 
         <div className="w-full flex bg-muted-light rounded-xl overflow-hidden">
-          <div className="px-5 py-3 bg-background rounded-l-xl border-dashed border-1 border-border">
+          <div className="px-5 py-3 bg-background rounded-l-xl border-dashed border border-border">
             <KeyIcon />
           </div>
           <input
             className="px-1 pl-3"
             onChange={(e) => setPassword(e.target.value)}
             type="password"
-            placeholder="請輸入密碼"
+            placeholder="請輸入密碼（6個字以內）"
             minLength={6}
             required
           />
@@ -149,7 +149,7 @@ export default function LoginForm() {
           <button
             onClick={handleGoogleSubmit}
             disabled={loading}
-            className="p-1 rounded-sm border-dashed border-1 border-background hover:border-border hover:shadow-md transition duration-300 cursor-pointer"
+            className="p-1 rounded-sm border-dashed border border-background hover:border-border hover:shadow-md transition duration-300 cursor-pointer"
           >
             <svg
               className="w-10 h-10"
