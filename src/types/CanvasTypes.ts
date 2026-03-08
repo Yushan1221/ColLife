@@ -17,5 +17,4 @@ export interface CanvasElement {
   y: number;
   rotation: number;
   scale: number;
-  zIndex: number;
 }

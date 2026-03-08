@@ -1,6 +1,27 @@
-import { doc, getDoc, setDoc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, deleteDoc, serverTimestamp, collection, getDocs } from 'firebase/firestore';
 import { db } from '@/src/lib/firebase'; 
 import { CanvasDocument, CanvasElement } from '../types/CanvasTypes';
+
+/**
+ * 獲取使用者所有已紀錄畫布的日期
+ * @param userId 使用者的 Firebase UID
+ * @returns 回傳日期字串陣列 ["YYYY-MM-DD", ...]
+ */
+export async function getRecordedDates(userId: string): Promise<string[]> {
+  if (!userId) throw new Error("缺少 userId 參數");
+
+  try {
+    const canvasesColRef = collection(db, 'users', userId, 'canvases');
+    const querySnapshot = await getDocs(canvasesColRef);
+    
+    // 取得所有文件的 ID (即日期字串)
+    const dates = querySnapshot.docs.map(doc => doc.id);
+    return dates;
+  } catch (error) {
+    console.error("獲取紀錄日期失敗:", error);
+    throw error;
+  }
+}
 
 /**
  * 讀取特定日期的畫布資料

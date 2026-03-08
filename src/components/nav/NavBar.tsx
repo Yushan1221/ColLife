@@ -9,8 +9,9 @@ export default function NavBar() {
 
   return (
     <div className="h-30 flex justify-between items-center fixed px-8 w-full">
-      <Link href="/">
-        <Image src="/logo.png" alt="ColLife" width={150} height={35} />
+      <Link href="/" className="flex justify-center items-center gap-1">
+        <Image src="/logo.png" alt="ColLife" width={65} height={65} />
+        <h1 className="text-3xl">ColLife</h1>
       </Link>
       {!user ? (
         <button onClick={openAuthModal} className="h-10 px-6 bg-primary cursor-pointer rounded-md font-bold border-dashed hover:bg-primary-hover hover:shadow-md transition duration-300">

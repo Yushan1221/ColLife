@@ -1,5 +1,5 @@
 export default function LoadingPage() {
   return (
-    <div>載入中...</div>
+    <div className="flex justify-center items-center pt-30">載入中...</div>
   )
 }
