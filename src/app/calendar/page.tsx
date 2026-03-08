@@ -2,7 +2,7 @@
 import { useAuth } from "@/src/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { LoadingPage } from "@/src/components/loading/LoadingPage";
+import LoadingPage from "@/src/components/loading/LoadingPage";
 import PinIcon from "@/src/components/icons/PinIcon";
 
 interface CalendarDay {
