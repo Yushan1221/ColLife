@@ -129,7 +129,7 @@ export default function LoginForm() {
             className="px-1 pl-3"
             onChange={(e) => setPassword(e.target.value)}
             type="password"
-            placeholder="請輸入密碼（6個字以內）"
+            placeholder="請輸入密碼（6個字以上）"
             minLength={6}
             required
           />
