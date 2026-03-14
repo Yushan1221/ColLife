@@ -14,9 +14,9 @@ export async function getRecordedDates(userId: string): Promise<string[]> {
     const canvasesColRef = collection(db, 'users', userId, 'canvases');
     const querySnapshot = await getDocs(canvasesColRef);
     
-    // 取得所有文件的 ID (即日期字串)
+    // 取得所有文件的 ID (即日期字串) 並排序
     const dates = querySnapshot.docs.map(doc => doc.id);
-    return dates;
+    return dates.sort((a, b) => a.localeCompare(b));
   } catch (error) {
     console.error("獲取紀錄日期失敗:", error);
     throw error;
