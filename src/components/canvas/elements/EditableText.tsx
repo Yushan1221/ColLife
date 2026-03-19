@@ -5,22 +5,17 @@ import { Text, Transformer } from "react-konva";
 import { useRef, useEffect, useState, useCallback } from "react";
 import Konva from "konva";
 import TextEditor from "./TextEditor";
+import { useCanvasStore } from "@/src/store/useCanvasStore";
 
 interface TextElementProps {
   element: TextElement;
-  isSelected: boolean;
-  isEditable: boolean;
-  onSelect: () => void;
-  onChange: (newAttrs: Partial<TextElement>) => void;
 }
 
-export default function EditableText({
-  element,
-  isSelected,
-  isEditable,
-  onSelect,
-  onChange,
-}: TextElementProps) {
+export default function EditableText({ element }: TextElementProps) {
+  const { isEditable, selectedId, selectElement, updateElement } =
+    useCanvasStore();
+  const isSelected = selectedId === element.id;
+
   const shapeRef = useRef<Konva.Text>(null);
   const trRef = useRef<Konva.Transformer>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -39,9 +34,12 @@ export default function EditableText({
     }
   }, [isEditable]);
 
-  const handleTextChange = useCallback((newText: string) => {
-    onChange({ content: newText });
-  }, [onChange]);
+  const handleTextChange = useCallback(
+    (newText: string) => {
+      updateElement(element.id, { content: newText });
+    },
+    [element.id, updateElement],
+  );
 
   // 算 fontstyle = "bold", "italic, "bold italic", "normal"
   const currentFontStyle =
@@ -63,14 +61,14 @@ export default function EditableText({
         fontFamily={element.fontFamily || "sans-serif"}
         fill={element.fill}
         draggable={isEditable && !isEditing}
-        onClick={onSelect}
-        onTap={onSelect}
+        onClick={() => selectElement(element)}
+        onTap={() => selectElement(element)}
         onDblClick={handleDblClick}
         onDblTap={handleDblClick}
         visible={!isEditing}
         // 拖拽結束更新位置
         onDragEnd={(e) => {
-          onChange({
+          updateElement(element.id, {
             x: e.target.x(),
             y: e.target.y(),
           });
@@ -92,7 +90,7 @@ export default function EditableText({
           const node = shapeRef.current;
           if (!node) return;
 
-          onChange({
+          updateElement(element.id, {
             x: node.x(),
             y: node.y(),
             rotation: node.rotation(),

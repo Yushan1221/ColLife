@@ -3,11 +3,10 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Stage, Layer } from "react-konva";
-import Konva from "konva";
 import { useAuth } from "@/src/hooks/useAuth";
 import { useCanvasNavigation } from "@/src/hooks/useCanvasNavigation";
 import { getCanvas, saveCanvas } from "@/src/utils/canvasOperations";
-import { CanvasElement, TextElement } from "@/src/types/CanvasTypes";
+import { StickerElement, TextElement } from "@/src/types/CanvasTypes";
 import LoadingPage from "@/src/components/loading/LoadingPage";
 import EditableText from "@/src/components/canvas/elements/EditableText";
 import Sticker from "@/src/components/canvas/elements/Sticker";
@@ -17,6 +16,7 @@ import ViewBoard from "@/src/components/canvas/panels/ViewBoard";
 import BackIcon from "@/src/components/icons/BackIcon";
 import ArrowLeftIcon from "@/src/components/icons/ArrowLeftIcon";
 import ArrowRightIcon from "@/src/components/icons/ArrowRightIcon";
+import { useCanvasStore } from "@/src/store/useCanvasStore";
 
 export default function CanvasPage() {
   const params = useParams();
@@ -25,16 +25,20 @@ export default function CanvasPage() {
   const { prevDate, nextDate } = useCanvasNavigation(user?.uid, date);
   const router = useRouter();
 
-  // --- State ---
-  const [elements, setElements] = useState<CanvasElement[]>([]);
-  const [isNew, setIsNew] = useState(false);
-  const [isEditable, setEditable] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState<"text" | "sticker" | "background">(
-    "text",
-  );
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const {
+    elements,
+    setElements,
+    isNew,
+    setIsNew,
+    isEditable,
+    setEditable,
+    activeTab,
+    setActiveTab,
+    clearSelection,
+  } = useCanvasStore();
 
   useEffect(() => {
     if (authLoading) return;
@@ -52,6 +56,7 @@ export default function CanvasPage() {
           setIsNew(false);
         } else {
           // 第一次新增
+          setElements([]);
           setIsNew(true);
         }
       } catch (error) {
@@ -62,55 +67,7 @@ export default function CanvasPage() {
     };
 
     initCanvas();
-  }, [user, date, authLoading, router]);
-
-  // 新增文字元件
-  const addTextElement = () => {
-    const newEl: TextElement = {
-      id: "text-" + Date.now(),
-      type: "text",
-      content: "點擊兩下編輯文字",
-      x: 100,
-      y: 100,
-      width: 200,
-      rotation: 0,
-      fontSize: 20,
-      fill: "black",
-      isBold: false,
-      isItalic: false,
-      fontFamily: "sans-serif",
-    };
-    setElements([...elements, newEl]);
-    setSelectedId(newEl.id); // 自動選取新元件
-  };
-
-  // 新增貼紙元件
-  const addStickerElement = (svgPath: string) => {
-    const newSticker: CanvasElement = {
-      id: "sticker-" + Date.now(),
-      type: "sticker",
-      src: svgPath,
-      x: 50,
-      y: 50,
-      rotation: 0,
-      scale: 0.3,
-    };
-    setElements([...elements, newSticker]);
-    setSelectedId(newSticker.id);
-  };
-
-  // 選取元件
-  const selectElement = (el: CanvasElement) => {
-    setSelectedId(el.id);
-    setActiveTab(el.type);
-  };
-
-  // 刪除元件
-  const deleteElement = () => {
-    if (!selectedId) return;
-    setElements(elements.filter((el) => el.id !== selectedId));
-    setSelectedId(null);
-  };
+  }, [user, date, authLoading, router, setElements, setIsNew]);
 
   // 儲存
   const handleSave = async () => {
@@ -127,16 +84,6 @@ export default function CanvasPage() {
     }
   };
 
-  // 點擊畫布空白處取消選取
-  const handleStageClick = (
-    e: Konva.KonvaEventObject<MouseEvent | TouchEvent>,
-  ) => {
-    const clickedOnEmpty = e.target === e.target.getStage();
-    if (clickedOnEmpty) {
-      setSelectedId(null);
-    }
-  };
-
   if (authLoading || loading) return <LoadingPage />;
 
   return (
@@ -146,7 +93,7 @@ export default function CanvasPage() {
         disabled={!prevDate}
         className="disabled:text-border disabled:opacity-50"
       >
-        <ArrowLeftIcon className="w-12 h-12"/>
+        <ArrowLeftIcon className="w-12 h-12" />
       </button>
 
       <div className="flex gap-10 bg-muted-light rounded-md w-4xl pl-10 pr-2 py-2 items-center justify-between bg-background">
@@ -194,25 +141,12 @@ export default function CanvasPage() {
               </div>
 
               <div className="flex-1 p-5 text-center rounded-2xl border-2 border-border border-dashed">
-                {activeTab === "text" && (
-                  <TextPanel
-                    onAddText={addTextElement}
-                    onDelete={deleteElement}
-                    selectedId={selectedId}
-                  />
-                )}
-
-                {activeTab === "sticker" && (
-                  <StickerPanel
-                    onAddSticker={addStickerElement}
-                    onDelete={deleteElement}
-                    selectedId={selectedId}
-                  />
-                )}
+                {activeTab === "text" && <TextPanel />}
+                {activeTab === "sticker" && <StickerPanel />}
               </div>
             </div>
           ) : (
-            <ViewBoard setEditable={setEditable} />
+            <ViewBoard />
           )}
         </div>
 
@@ -225,50 +159,27 @@ export default function CanvasPage() {
             <Stage
               width={450}
               height={600}
-              onMouseDown={handleStageClick}
-              onTouchStart={handleStageClick}
+              onMouseDown={(e) => {
+                // 只有點擊到空白背景（即點擊目標是 Stage 本身）時，才取消選取
+                const clickedOnEmpty = e.target === e.target.getStage();
+                if (clickedOnEmpty) {
+                  clearSelection();
+                }
+              }}
+              onTouchStart={(e) => {
+                const clickedOnEmpty = e.target === e.target.getStage();
+                if (clickedOnEmpty) {
+                  clearSelection();
+                }
+              }}
             >
               <Layer>
                 {elements.map((el) => {
                   if (el.type === "text") {
-                    return (
-                      <EditableText
-                        key={el.id}
-                        element={el as TextElement}
-                        isSelected={el.id === selectedId}
-                        isEditable={isEditable}
-                        onSelect={() => selectElement(el)}
-                        onChange={(newAttrs) => {
-                          setElements(
-                            elements.map((item) =>
-                              item.id === el.id
-                                ? ({ ...item, ...newAttrs } as CanvasElement)
-                                : item,
-                            ),
-                          );
-                        }}
-                      />
-                    );
+                    return <EditableText key={el.id} element={el as TextElement} />;
                   }
                   if (el.type === "sticker") {
-                    return (
-                      <Sticker
-                        key={el.id}
-                        element={el}
-                        isSelected={el.id === selectedId}
-                        isEditable={isEditable}
-                        onSelect={() => selectElement(el)}
-                        onChange={(newAttrs) => {
-                          setElements(
-                            elements.map((item) =>
-                              item.id === el.id
-                                ? ({ ...item, ...newAttrs } as CanvasElement)
-                                : item,
-                            ),
-                          );
-                        }}
-                      />
-                    );
+                    return <Sticker key={el.id} element={el as StickerElement} />;
                   }
                   return null;
                 })}
@@ -283,7 +194,7 @@ export default function CanvasPage() {
         disabled={!nextDate}
         className=" disabled:text-border disabled:opacity-50"
       >
-        <ArrowRightIcon className="w-12 h-12"/>
+        <ArrowRightIcon className="w-12 h-12" />
       </button>
     </div>
   );

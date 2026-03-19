@@ -1,16 +1,9 @@
 import Image from "next/image";
+import { useCanvasStore } from "@/src/store/useCanvasStore";
 
-interface StickerPanelProps {
-  onAddSticker: (svgPath: string) => void;
-  onDelete: () => void;
-  selectedId: string | null;
-}
+export default function StickerPanel() {
+  const {selectedId, addStickerElement, deleteElement} = useCanvasStore(); 
 
-export default function StickerPanel({
-  onAddSticker,
-  onDelete,
-  selectedId,
-}: StickerPanelProps) {
   const stickers = [
     { name: "dancing", path: "/assets/stickers/dancing.svg" },
     { name: "dog-jump", path: "/assets/stickers/dog-jump.svg" },
@@ -27,7 +20,7 @@ export default function StickerPanel({
           <div 
             key={sticker.name}
             className="cursor-pointer rounded-lg p-2 transition flex items-center justify-center border border-transparent border-dashed hover:border-border"
-            onClick={() => onAddSticker(sticker.path)}
+            onClick={() => addStickerElement(sticker.path)}
           >
             <Image 
               src={sticker.path} 
@@ -42,7 +35,7 @@ export default function StickerPanel({
 
       {selectedId && (
         <button 
-          onClick={onDelete} 
+          onClick={deleteElement} 
           className="p-2 bg-primary hover:bg-primary-hover w-full rounded-md"
         >
           刪除選取物件

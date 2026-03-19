@@ -2,23 +2,18 @@ import { useRef, useEffect } from "react";
 import { Image as KonvaImage, Transformer } from "react-konva";
 import useImage from "use-image";
 import Konva from "konva";
-import { CanvasElement, StickerElement } from "@/src/types/CanvasTypes";
+import { StickerElement } from "@/src/types/CanvasTypes";
+import { useCanvasStore } from "@/src/store/useCanvasStore";
 
-interface StickerElementProps {
+interface StickerProps {
   element: StickerElement;
-  isSelected: boolean;
-  isEditable: boolean;
-  onSelect: () => void;
-  onChange: (newAttrs: Partial<CanvasElement>) => void;
 }
 
-export default function Sticker({
-  element,
-  isSelected,
-  isEditable,
-  onSelect,
-  onChange,
-}: StickerElementProps) {
+export default function Sticker({ element }: StickerProps) {
+  const { isEditable, selectedId, selectElement, updateElement } =
+    useCanvasStore();
+  const isSelected = selectedId === element.id;
+
   const shapeRef = useRef<Konva.Image>(null);
   const trRef = useRef<Konva.Transformer>(null);
   const [image] = useImage(element.src || "");
@@ -41,10 +36,10 @@ export default function Sticker({
         scaleX={element.scale}
         scaleY={element.scale}
         draggable={isEditable}
-        onClick={onSelect}
-        onTap={onSelect}
+        onClick={() => selectElement(element)}
+        onTap={() => selectElement(element)}
         onDragEnd={(e) => {
-          onChange({
+          updateElement(element.id, {
             x: e.target.x(),
             y: e.target.y(),
           });
@@ -52,10 +47,10 @@ export default function Sticker({
         onTransformEnd={() => {
           const node = shapeRef.current;
           if (!node) return;
-          
+
           const scaleX = node.scaleX();
 
-          onChange({
+          updateElement(element.id, {
             x: node.x(),
             y: node.y(),
             rotation: node.rotation(),
@@ -66,7 +61,12 @@ export default function Sticker({
       {isEditable && isSelected && (
         <Transformer
           ref={trRef}
-          enabledAnchors={["top-left", "top-right", "bottom-left", "bottom-right"]}
+          enabledAnchors={[
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right",
+          ]}
           boundBoxFunc={(oldBox, newBox) => {
             // 限制最小縮放
             if (Math.abs(newBox.width) < 5 || Math.abs(newBox.height) < 5) {

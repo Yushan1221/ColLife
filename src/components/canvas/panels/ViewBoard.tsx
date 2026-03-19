@@ -2,14 +2,12 @@ import PenToolIcon from "../../icons/PenToolIcon";
 import DownloadIcon from "../../icons/DownloadIcon";
 import CalendarIcon from "../../icons/CalendarIcon";
 import { useRouter } from "next/navigation";
+import { useCanvasStore } from "@/src/store/useCanvasStore";
 
-interface ViewBoardProps {
-  setEditable: (isEditable: boolean) => void;
-}
-
-export default function ViewBoard({ setEditable }: ViewBoardProps) {
+export default function ViewBoard() {
 
   const router = useRouter();
+  const { setEditable } = useCanvasStore();
 
   const pushToCalender = () => {
     router.push("/calendar");
