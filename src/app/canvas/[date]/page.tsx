@@ -96,9 +96,9 @@ export default function CanvasPage() {
         <ArrowLeftIcon className="w-12 h-12" />
       </button>
 
-      <div className="flex gap-10 bg-muted-light rounded-md w-4xl pl-10 pr-2 py-2 items-center justify-between bg-background">
+      <div className="flex gap-5 bg-muted-light rounded-md w-4xl pl-10 pr-2 py-2 items-center justify-between bg-background">
         {/* 左側側邊欄 */}
-        <div className="flex flex-1 flex-col h-[580px] gap-3">
+        <div className="flex flex-1 flex-col h-[580px] w-90 gap-3">
           <div className="flex justify-start h-10 gap-3 items-center">
             {isEditable && (
               <button
@@ -140,7 +140,7 @@ export default function CanvasPage() {
                 </div>
               </div>
 
-              <div className="flex-1 p-5 text-center rounded-2xl border-2 border-border border-dashed">
+              <div className="flex-1 min-w-0 p-5 text-center rounded-2xl border-2 border-border border-dashed">
                 {activeTab === "text" && <TextPanel />}
                 {activeTab === "sticker" && <StickerPanel />}
               </div>

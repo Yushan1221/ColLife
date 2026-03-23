@@ -1,6 +1,7 @@
 import { useCanvasStore } from "@/src/store/useCanvasStore";
 import { TextElement } from "@/src/types/CanvasTypes";
-import { Slider } from "../../ui/slider";
+import { Slider } from "../../ui/Slider";
+import FontSelector from "../../ui/FontSelector";
 
 export default function TextPanel() {
   const { elements, selectedId, addTextElement, deleteElement, updateElement } =
@@ -19,35 +20,76 @@ export default function TextPanel() {
         T 新增文字
       </button>
 
-      {/* 字型大小 */}
-      <div className="flex justify-between items-center gap-2">
-        <p className="text-sm">T</p>
-        {/* <input
-          type="range"
-          disabled={!selectedText}
-          min={8}
-          max={150}
-          step={2}
-          value={selectedText?.fontSize || 20}
-          onChange={(e) => {
-            if (!selectedId) return;
-            updateElement(selectedId, { fontSize: Number(e.target.value) });
-          }}
-          className="accent-primary flex-1"
-        /> */}
-        <Slider
-          max={150}
-          min={8}
-          step={2}
-          disabled={!selectedText}
-          value={[selectedText?.fontSize || 0]}
-          onValueChange={(val) => {
-            if (!selectedId) return;
-            updateElement(selectedId, { fontSize: val[0] });
-          }}
-          className="disabled:opacity-50"
-        />
-        <p className="text-lg">T</p>
+      {/* 字體樣式 */}
+      <div className=" min-w-0">
+        <p className="text-sm pb-0.5 font-bold text-start pl-0.5">字體樣式</p>
+        <div className="flex flex-col gap-2  w-full p-3 border-2 border-dashed border-border rounded-md min-w-0">
+          <div className="flex justify-start gap-2">
+            <button
+              disabled={!selectedText}
+              onClick={() => {
+                if (!selectedId || !selectedText) return;
+                updateElement(selectedId, { isBold: !selectedText.isBold });
+              }}
+              className={`font-black w-6 h-6 rounded-sm transition-all duration-100 ${
+                selectedText?.isBold
+                  ? "bg-muted inset-shadow-sm/15 text-background"
+                  : "bg-background"
+              }`}
+            >
+              B
+            </button>
+            <button
+              disabled={!selectedText}
+              onClick={() => {
+                if (!selectedId || !selectedText) return;
+                updateElement(selectedId, { isItalic: !selectedText.isItalic });
+              }}
+              className={`font-medium italic w-6 h-6 rounded-sm transition-all duration-100 ${
+                selectedText?.isItalic
+                  ? "bg-muted inset-shadow-sm/15 text-background"
+                  : "bg-background"
+              }`}
+            >
+              I
+            </button>
+          </div>
+          {/* 字型大小 */}
+          <div className="flex justify-between items-center gap-2">
+            <p>A</p>
+            <Slider
+              max={150}
+              min={8}
+              step={2}
+              disabled={!selectedText}
+              value={[selectedText?.fontSize || 0]}
+              onValueChange={(val) => {
+                if (!selectedId) return;
+                updateElement(selectedId, { fontSize: val[0] });
+              }}
+              className="disabled:opacity-50"
+            />
+            <input
+              className="w-8 text-center text-sm bg-background rounded-sm p-1 disabled:text-accent"
+              type="number"
+              disabled={!selectedText}
+              value={selectedText?.fontSize || 20}
+              onChange={(e) => {
+                if (!selectedId) return;
+                let value = Number(e.target.value);
+                if (value < 0) value = 0;
+                if (value > 150) value = 150;
+                updateElement(selectedId, { fontSize: value });
+              }}
+            />
+            {/* <div className="">
+              <button className="">+</button>
+              <button>-</button>
+            </div> */}
+          </div>
+          {/* 字體 */}
+          <FontSelector />
+        </div>
       </div>
 
       {selectedId && (
