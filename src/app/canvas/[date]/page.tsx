@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Stage, Layer } from "react-konva";
+import { Stage, Layer, Rect } from "react-konva";
 import { useAuth } from "@/src/hooks/useAuth";
 import { useCanvasNavigation } from "@/src/hooks/useCanvasNavigation";
 import { getCanvas, saveCanvas } from "@/src/utils/canvasOperations";
@@ -17,6 +17,8 @@ import BackIcon from "@/src/components/icons/BackIcon";
 import ArrowLeftIcon from "@/src/components/icons/ArrowLeftIcon";
 import ArrowRightIcon from "@/src/components/icons/ArrowRightIcon";
 import { useCanvasStore } from "@/src/store/useCanvasStore";
+import PanelSwitcher from "@/src/components/canvas/panels/PanelSwitcher";
+import BackgroundPanel from "@/src/components/canvas/panels/BackgroundPanel";
 
 export default function CanvasPage() {
   const params = useParams();
@@ -31,12 +33,13 @@ export default function CanvasPage() {
   const {
     elements,
     setElements,
+    background,
+    setBackground,
     isNew,
     setIsNew,
     isEditable,
     setEditable,
     activeTab,
-    setActiveTab,
     clearSelection,
   } = useCanvasStore();
 
@@ -53,10 +56,12 @@ export default function CanvasPage() {
         if (data) {
           // 不是第一次新增
           setElements(data.elements || []);
+          setBackground(data.background);
           setIsNew(false);
         } else {
           // 第一次新增
           setElements([]);
+          setBackground("#fdfbf7");
           setIsNew(true);
         }
       } catch (error) {
@@ -67,14 +72,14 @@ export default function CanvasPage() {
     };
 
     initCanvas();
-  }, [user, date, authLoading, router, setElements, setIsNew]);
+  }, [user, date, authLoading, router, setElements, setIsNew, setBackground]);
 
   // 儲存
   const handleSave = async () => {
     if (!user || !date) return;
     setIsSaving(true);
     try {
-      await saveCanvas(user.uid, date, elements, isNew);
+      await saveCanvas(user.uid, date, elements, isNew, background);
       alert("儲存成功！");
       if (isNew) setIsNew(false);
     } catch (error) {
@@ -88,13 +93,15 @@ export default function CanvasPage() {
 
   return (
     <div className="pt-25 flex justify-center items-center gap-3">
-      <button
-        onClick={() => router.push(`/canvas/${prevDate}`)}
-        disabled={!prevDate}
-        className="disabled:text-border disabled:opacity-50"
-      >
-        <ArrowLeftIcon className="w-12 h-12" />
-      </button>
+      {!isEditable && (
+        <button
+          onClick={() => router.push(`/canvas/${prevDate}`)}
+          disabled={!prevDate}
+          className="disabled:text-border disabled:opacity-50"
+        >
+          <ArrowLeftIcon className="w-12 h-12" />
+        </button>
+      )}
 
       <div className="flex gap-5 bg-muted-light rounded-md w-4xl pl-10 pr-2 py-2 items-center justify-between bg-background">
         {/* 左側側邊欄 */}
@@ -114,21 +121,7 @@ export default function CanvasPage() {
           {isEditable ? (
             <div className="flex gap-5 flex-1">
               <div className="flex flex-col justify-between">
-                <div className="flex flex-col justify-center items-center py-3 gap-3 w-20 border-2 border-dashed border-border rounded-2xl">
-                  {/* 文字框 */}
-                  <button
-                    onClick={() => setActiveTab("text")}
-                    className="w-12 h-12 bg-muted hover:bg-primary transition duration-300 rounded-md font-bold"
-                  >
-                    T
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("sticker")}
-                    className="w-12 h-12 bg-muted hover:bg-primary transition duration-300 rounded-md font-bold"
-                  >
-                    S
-                  </button>
-                </div>
+                <PanelSwitcher />
                 <div>
                   <button
                     onClick={handleSave}
@@ -141,6 +134,7 @@ export default function CanvasPage() {
               </div>
 
               <div className="flex-1 min-w-0 p-5 text-center rounded-2xl border-2 border-border border-dashed">
+                {activeTab === "background" && <BackgroundPanel />}
                 {activeTab === "text" && <TextPanel />}
                 {activeTab === "sticker" && <StickerPanel />}
               </div>
@@ -174,12 +168,24 @@ export default function CanvasPage() {
               }}
             >
               <Layer>
+                <Rect
+                  width={450}
+                  height={600}
+                  fill={background}
+                  listening={false}
+                />
+              </Layer>
+              <Layer>
                 {elements.map((el) => {
                   if (el.type === "text") {
-                    return <EditableText key={el.id} element={el as TextElement} />;
+                    return (
+                      <EditableText key={el.id} element={el as TextElement} />
+                    );
                   }
                   if (el.type === "sticker") {
-                    return <Sticker key={el.id} element={el as StickerElement} />;
+                    return (
+                      <Sticker key={el.id} element={el as StickerElement} />
+                    );
                   }
                   return null;
                 })}
@@ -189,13 +195,15 @@ export default function CanvasPage() {
         </main>
       </div>
 
-      <button
-        onClick={() => router.push(`/canvas/${nextDate}`)}
-        disabled={!nextDate}
-        className=" disabled:text-border disabled:opacity-50"
-      >
-        <ArrowRightIcon className="w-12 h-12" />
-      </button>
+      {!isEditable && (
+        <button
+          onClick={() => router.push(`/canvas/${nextDate}`)}
+          disabled={!nextDate}
+          className=" disabled:text-border disabled:opacity-50"
+        >
+          <ArrowRightIcon className="w-12 h-12" />
+        </button>
+      )}
     </div>
   );
 }

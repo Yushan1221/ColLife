@@ -4,7 +4,7 @@ export interface FontOption {
 }
 
 export const FONT_OPTIONS: FontOption[] = [
-  { label: "預設無襯線", value: "sans-serif" }, // 保留一個最基本安全的預設值
+  { label: "sans-serif", value: "sans-serif" },
   { label: "Amatic SC", value: "'Amatic SC', cursive" },
   { label: "Betania Patmos GDL", value: "'Betania Patmos GDL', cursive" },
   { label: "Bitcount Grid Double Ink", value: "'Bitcount Grid Double Ink', sans-serif" },

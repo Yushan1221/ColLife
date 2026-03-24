@@ -160,3 +160,7 @@ input[type="number"]::-webkit-inner-spin-button {
     @apply bg-background text-foreground;
   }
 }
+
+@utility border-standard {
+  @apply border-2 border-border border-dashed;
+}

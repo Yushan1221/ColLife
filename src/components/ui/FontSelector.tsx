@@ -46,7 +46,7 @@ export default function FontSelector() {
         disabled={!selectedText}
         onClick={() => setIsOpen((prev) => !prev)}
         style={{ fontFamily: selectedText?.fontFamily }}
-        className="disabled:opacity-70 flex items-center justify-between w-full overflow-hidden truncate text-left pl-3 pr-2 py-1 bg-background border-2 border-dashed rounded-md "
+        className="flex items-center justify-between w-full overflow-hidden truncate text-left pl-3 pr-2 py-1 bg-background border-2 border-dashed rounded-md "
       >
         <span className="truncate flex-1">{currentFontLabel}</span>
         <svg

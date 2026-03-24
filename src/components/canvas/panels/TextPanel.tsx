@@ -2,6 +2,7 @@ import { useCanvasStore } from "@/src/store/useCanvasStore";
 import { TextElement } from "@/src/types/CanvasTypes";
 import { Slider } from "../../ui/Slider";
 import FontSelector from "../../ui/FontSelector";
+import ColorPicker from "../../ui/ColorPicker";
 
 export default function TextPanel() {
   const { elements, selectedId, addTextElement, deleteElement, updateElement } =
@@ -21,7 +22,7 @@ export default function TextPanel() {
       </button>
 
       {/* 字體樣式 */}
-      <div className=" min-w-0">
+      <div className={`" min-w-0" ${!selectedText && "opacity-70"}`}>
         <p className="text-sm pb-0.5 font-bold text-start pl-0.5">字體樣式</p>
         <div className="flex flex-col gap-2  w-full p-3 border-2 border-dashed border-border rounded-md min-w-0">
           <div className="flex justify-start gap-2">
@@ -67,7 +68,6 @@ export default function TextPanel() {
                 if (!selectedId) return;
                 updateElement(selectedId, { fontSize: val[0] });
               }}
-              className="disabled:opacity-50"
             />
             <input
               className="w-8 text-center text-sm bg-background rounded-sm p-1 disabled:text-accent"
@@ -89,6 +89,15 @@ export default function TextPanel() {
           </div>
           {/* 字體 */}
           <FontSelector />
+
+          {/* 調色盤 */}
+          <ColorPicker
+            value={selectedText?.fill}
+            onChange={(color) => {
+              if (!selectedId) return;
+              updateElement(selectedId, { fill: color });
+            }}
+          />
         </div>
       </div>
 

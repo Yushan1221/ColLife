@@ -8,16 +8,18 @@ import {
 interface CanvasState {
   // state
   elements: CanvasElement[];
+  background: string;
   isNew: boolean;
   isEditable: boolean;
-  activeTab: "text" | "sticker" | "background";
+  activeTab: "text" | "sticker" | "background" | "photo";
   selectedId: string | null;
 
   // setState
   setElements: (elements: CanvasElement[]) => void;
+  setBackground: (color: string) => void;
   setIsNew: (isNew: boolean) => void;
   setEditable: (isEditable: boolean) => void;
-  setActiveTab: (tab: "text" | "sticker" | "background") => void;
+  setActiveTab: (tab: "text" | "sticker" | "background" | "photo") => void;
   setSelectedId: (id: string | null) => void;
 
   // canvas operations
@@ -32,6 +34,7 @@ interface CanvasState {
 export const useCanvasStore = create<CanvasState>((set) => ({
   // 初始值
   elements: [],
+  background: "#fdfbf7",
   isNew: false,
   isEditable: false,
   activeTab: "text",
@@ -39,6 +42,7 @@ export const useCanvasStore = create<CanvasState>((set) => ({
 
   // 基礎設定
   setElements: (elements) => set({ elements }),
+  setBackground: (background) => set({ background }),
   setIsNew: (isNew) => set({ isNew }),
   setEditable: (isEditable) => set({ isEditable }),
   setActiveTab: (activeTab) => set({ activeTab }),
