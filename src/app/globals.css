@@ -164,3 +164,7 @@ input[type="number"]::-webkit-inner-spin-button {
 @utility border-standard {
   @apply border-2 border-border border-dashed;
 }
+
+@utility border-hidden {
+  @apply border-2 border-transparent border-dashed;
+}

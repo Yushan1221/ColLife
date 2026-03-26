@@ -3,6 +3,7 @@ import FileIcon from "../../icons/FileIcon";
 import PencilIcon from "../../icons/PencilIcon";
 import PhotoIcon from "../../icons/PhotoIcon";
 import ShapeIcon from "../../icons/ShapeIcon";
+import LayerIcon from "../../icons/LayerIcon";
 
 export default function PanelSwitcher() {
   const { activeTab, setActiveTab } = useCanvasStore();
@@ -37,10 +38,17 @@ export default function PanelSwitcher() {
       </button>
       {/* 照片 */}
       <button
-        onClick={() => setActiveTab("photo")}
-        className={`${cssButton} ${activeTab === "photo" ? "bg-primary shadow" : "bg-muted"}`}
+        onClick={() => setActiveTab("image")}
+        className={`${cssButton} ${activeTab === "image" ? "bg-primary shadow" : "bg-muted"}`}
       >
         <PhotoIcon className={cssIcon} />
+      </button>
+      {/* 圖層 */}
+      <button
+        onClick={() => setActiveTab("layer")}
+        className={`${cssButton} ${activeTab === "layer" ? "bg-primary shadow" : "bg-muted"}`}
+      >
+        <LayerIcon className={cssIcon} />
       </button>
     </div>
   );

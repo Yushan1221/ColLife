@@ -5,20 +5,19 @@ import { useParams, useRouter } from "next/navigation";
 import { Stage, Layer, Rect } from "react-konva";
 import { useAuth } from "@/src/hooks/useAuth";
 import { useCanvasNavigation } from "@/src/hooks/useCanvasNavigation";
-import { getCanvas, saveCanvas } from "@/src/utils/canvasOperations";
-import { StickerElement, TextElement } from "@/src/types/CanvasTypes";
+import { getCanvas } from "@/src/utils/canvasOperations";
+import { StickerElement, TextElement, ImageElement } from "@/src/types/CanvasTypes";
 import LoadingPage from "@/src/components/loading/LoadingPage";
 import EditableText from "@/src/components/canvas/elements/EditableText";
 import Sticker from "@/src/components/canvas/elements/Sticker";
-import TextPanel from "@/src/components/canvas/panels/TextPanel";
-import StickerPanel from "@/src/components/canvas/panels/StickerPanel";
+import EditableImage from "@/src/components/canvas/elements/EditableImage";
 import ViewBoard from "@/src/components/canvas/panels/ViewBoard";
 import BackIcon from "@/src/components/icons/BackIcon";
 import ArrowLeftIcon from "@/src/components/icons/ArrowLeftIcon";
 import ArrowRightIcon from "@/src/components/icons/ArrowRightIcon";
 import { useCanvasStore } from "@/src/store/useCanvasStore";
-import PanelSwitcher from "@/src/components/canvas/panels/PanelSwitcher";
-import BackgroundPanel from "@/src/components/canvas/panels/BackgroundPanel";
+import EditBoard from "@/src/components/canvas/panels/EditBoard";
+import { useKeyboardDelete } from "@/src/hooks/useKeyboardDelete";
 
 export default function CanvasPage() {
   const params = useParams();
@@ -28,24 +27,25 @@ export default function CanvasPage() {
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
 
   const {
     elements,
     setElements,
     background,
     setBackground,
-    isNew,
     setIsNew,
     isEditable,
     setEditable,
-    activeTab,
     clearSelection,
+    resetStore
   } = useCanvasStore();
+
+  // 啟用鍵盤刪除功能
+  useKeyboardDelete();
 
   useEffect(() => {
     if (authLoading) return;
-    if (!user) {
+    if (!user || !date) {
       router.push("/");
       return;
     }
@@ -58,11 +58,6 @@ export default function CanvasPage() {
           setElements(data.elements || []);
           setBackground(data.background);
           setIsNew(false);
-        } else {
-          // 第一次新增
-          setElements([]);
-          setBackground("#fdfbf7");
-          setIsNew(true);
         }
       } catch (error) {
         console.error("初始化失敗:", error);
@@ -72,22 +67,9 @@ export default function CanvasPage() {
     };
 
     initCanvas();
-  }, [user, date, authLoading, router, setElements, setIsNew, setBackground]);
 
-  // 儲存
-  const handleSave = async () => {
-    if (!user || !date) return;
-    setIsSaving(true);
-    try {
-      await saveCanvas(user.uid, date, elements, isNew, background);
-      alert("儲存成功！");
-      if (isNew) setIsNew(false);
-    } catch (error) {
-      console.error("儲存失敗:", error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
+    return () => resetStore(); // 重製初始 state
+  }, [user, date, authLoading, router, setElements, setIsNew, setBackground, resetStore]);
 
   if (authLoading || loading) return <LoadingPage />;
 
@@ -119,26 +101,7 @@ export default function CanvasPage() {
           </div>
 
           {isEditable ? (
-            <div className="flex gap-5 flex-1">
-              <div className="flex flex-col justify-between">
-                <PanelSwitcher />
-                <div>
-                  <button
-                    onClick={handleSave}
-                    disabled={isSaving}
-                    className="w-20 py-1 bg-primary hover:bg-primary-hover rounded-md"
-                  >
-                    {isSaving ? "儲存中..." : "儲存畫布"}
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex-1 min-w-0 p-5 text-center rounded-2xl border-2 border-border border-dashed">
-                {activeTab === "background" && <BackgroundPanel />}
-                {activeTab === "text" && <TextPanel />}
-                {activeTab === "sticker" && <StickerPanel />}
-              </div>
-            </div>
+            <EditBoard date={date}/>
           ) : (
             <ViewBoard />
           )}
@@ -185,6 +148,11 @@ export default function CanvasPage() {
                   if (el.type === "sticker") {
                     return (
                       <Sticker key={el.id} element={el as StickerElement} />
+                    );
+                  }
+                  if (el.type === "image") {
+                    return (
+                      <EditableImage key={el.id} element={el as ImageElement} />
                     );
                   }
                   return null;

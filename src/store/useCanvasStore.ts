@@ -3,45 +3,27 @@ import {
   CanvasElement,
   TextElement,
   StickerElement,
+  ImageElement,
 } from "../types/CanvasTypes";
+import { CanvasState, CanvasStore } from "../types/CanvasStoreTypes";
 
-interface CanvasState {
-  // state
-  elements: CanvasElement[];
-  background: string;
-  isNew: boolean;
-  isEditable: boolean;
-  activeTab: "text" | "sticker" | "background" | "photo";
-  selectedId: string | null;
-
-  // setState
-  setElements: (elements: CanvasElement[]) => void;
-  setBackground: (color: string) => void;
-  setIsNew: (isNew: boolean) => void;
-  setEditable: (isEditable: boolean) => void;
-  setActiveTab: (tab: "text" | "sticker" | "background" | "photo") => void;
-  setSelectedId: (id: string | null) => void;
-
-  // canvas operations
-  addTextElement: () => void;
-  addStickerElement: (svgPath: string) => void;
-  selectElement: (el: CanvasElement) => void;
-  updateElement: (id: string, newAttrs: Partial<CanvasElement>) => void;
-  deleteElement: () => void;
-  clearSelection: () => void;
-}
-
-export const useCanvasStore = create<CanvasState>((set) => ({
-  // 初始值
+// 初始值
+const initialCanvasState: CanvasState = {
   elements: [],
+  userImages: [],
   background: "#fdfbf7",
   isNew: false,
   isEditable: false,
   activeTab: "text",
   selectedId: null,
+};
+
+export const useCanvasStore = create<CanvasStore>((set) => ({
+  ...initialCanvasState,
 
   // 基礎設定
   setElements: (elements) => set({ elements }),
+  setUserImages: (userImages) => set({ userImages }),
   setBackground: (background) => set({ background }),
   setIsNew: (isNew) => set({ isNew }),
   setEditable: (isEditable) => set({ isEditable }),
@@ -94,6 +76,32 @@ export const useCanvasStore = create<CanvasState>((set) => ({
       };
     }),
 
+  // 新增圖片元件
+  addImageElement: (url, width, height) =>
+    set((state) => {
+      const newImage: ImageElement = {
+        id: "image-" + Date.now(),
+        type: "image",
+        src: url,
+        x: 50,
+        y: 50,
+        rotation: 0,
+        width: width > 300 ? 300 : width, // 限制初始顯示寬度
+        height: width > 300 ? (height * 300) / width : height,
+        scale: 1,
+        cropX: 0,
+        cropY: 0,
+        cropWidth: width,
+        cropHeight: height,
+      };
+
+      return {
+        elements: [...state.elements, newImage],
+        selectedId: newImage.id,
+        activeTab: "image",
+      };
+    }),
+
   // 選取元件
   selectElement: (el) =>
     set({
@@ -122,4 +130,67 @@ export const useCanvasStore = create<CanvasState>((set) => ({
 
   // 取消選取
   clearSelection: () => set({ selectedId: null }),
+
+  // 重製狀態回初始值
+  resetStore: () => set(initialCanvasState),
+
+  // 置頂
+  bringToFront: (id: string) =>
+    set((state) => {
+      const index = state.elements.findIndex((el) => el.id === id);
+      // 如果找不到，或者已經在最頂層，就不做事
+      if (index === -1 || index === state.elements.length - 1) return state;
+
+      const newElements = [...state.elements];
+      const [target] = newElements.splice(index, 1); // 把目標抽出來
+      newElements.push(target); // 塞到最後面
+
+      return { elements: newElements };
+    }),
+
+  // 置底
+  sendToBack: (id: string) =>
+    set((state) => {
+      const index = state.elements.findIndex((el) => el.id === id);
+      // 如果找不到，或者已經在最底層，就不做事
+      if (index <= 0) return state;
+
+      const newElements = [...state.elements];
+      const [target] = newElements.splice(index, 1); // 把目標抽出來
+      newElements.unshift(target); // 塞到最前面
+
+      return { elements: newElements };
+    }),
+
+  // 上移一層
+  bringForward: (id: string) =>
+    set((state) => {
+      const index = state.elements.findIndex((el) => el.id === id);
+      // 如果找不到，或者已經在最頂層，無法再上移
+      if (index === -1 || index === state.elements.length - 1) return state;
+
+      const newElements = [...state.elements];
+      [newElements[index], newElements[index + 1]] = [
+        newElements[index + 1],
+        newElements[index],
+      ];
+
+      return { elements: newElements };
+    }),
+
+    // 下移一層
+  sendBackward: (id: string) =>
+    set((state) => {
+      const index = state.elements.findIndex((el) => el.id === id);
+      // 如果找不到，或者已經在最底層，無法再下移
+      if (index <= 0) return state;
+
+      const newElements = [...state.elements];
+      [newElements[index], newElements[index - 1]] = [
+        newElements[index - 1],
+        newElements[index],
+      ];
+
+      return { elements: newElements };
+    }),
 }));

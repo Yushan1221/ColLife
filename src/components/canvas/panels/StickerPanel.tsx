@@ -1,22 +1,14 @@
 import Image from "next/image";
 import { useCanvasStore } from "@/src/store/useCanvasStore";
+import { STICKERS } from "@/src/lib/constants/stickers";
 
 export default function StickerPanel() {
   const {selectedId, addStickerElement, deleteElement} = useCanvasStore(); 
 
-  const stickers = [
-    { name: "dancing", path: "/assets/stickers/dancing.svg" },
-    { name: "dog-jump", path: "/assets/stickers/dog-jump.svg" },
-    { name: "float", path: "/assets/stickers/float.svg" },
-    { name: "petting", path: "/assets/stickers/petting.svg" },
-    { name: "reading-side", path: "/assets/stickers/reading-side.svg" },
-    { name: "reading", path: "/assets/stickers/reading.svg" },
-  ];
-
   return (
     <div className="flex flex-col gap-6 h-full justify-between">
       <div className="grid grid-cols-2 gap-4 overflow-y-auto max-h-[60vh] p-1">
-        {stickers.map((sticker) => (
+        {STICKERS.map((sticker) => (
           <div 
             key={sticker.name}
             className="cursor-pointer rounded-lg p-2 transition flex items-center justify-center border border-transparent border-dashed hover:border-border"

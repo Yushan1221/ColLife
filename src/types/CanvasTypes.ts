@@ -35,6 +35,21 @@ export interface StickerElement extends BaseElement {
   scale: number;
 }
 
+// 圖片專屬型態
+export interface ImageElement extends BaseElement {
+  type: 'image';
+  src: string;
+  width: number;
+  height: number;
+  scale: number;
+
+  // 裁切屬性
+  cropX: number;
+  cropY: number;
+  cropWidth: number;
+  cropHeight: number;
+}
+
 // 最終統一使用的型別
-export type CanvasElement = TextElement | StickerElement;
+export type CanvasElement = TextElement | StickerElement | ImageElement;
 
