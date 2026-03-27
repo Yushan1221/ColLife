@@ -1,6 +1,6 @@
 import { useCanvasStore } from "@/src/store/useCanvasStore";
 import { TextElement } from "@/src/types/CanvasTypes";
-import { Slider } from "../../ui/Slider";
+import { Slider } from "../../ui/slider";
 import FontSelector from "../../ui/FontSelector";
 import ColorPicker from "../../ui/ColorPicker";
 
