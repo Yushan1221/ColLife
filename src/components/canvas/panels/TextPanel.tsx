@@ -5,7 +5,7 @@ import FontSelector from "../../ui/FontSelector";
 import ColorPicker from "../../ui/ColorPicker";
 
 export default function TextPanel() {
-  const { elements, selectedId, addTextElement, deleteElement, updateElement } =
+  const { elements, selectedId, addTextElement, updateElement } =
     useCanvasStore();
 
   const selectedText = elements.find(
@@ -18,12 +18,12 @@ export default function TextPanel() {
         onClick={addTextElement}
         className="py-2 w-full bg-primary hover:bg-primary-hover rounded-md"
       >
-        T 新增文字
+        <span className="font-bold pr-3">T</span> Add Text
       </button>
 
       {/* 字體樣式 */}
       <div className={`" min-w-0" ${!selectedText && "opacity-70"}`}>
-        <p className="text-sm pb-0.5 font-bold text-start pl-0.5">字體樣式</p>
+        <p className="text-start pb-1 text-sm">Text Style</p>
         <div className="flex flex-col gap-2  w-full p-3 border-2 border-dashed border-border rounded-md min-w-0">
           <div className="flex justify-start gap-2">
             <button
@@ -100,15 +100,6 @@ export default function TextPanel() {
           />
         </div>
       </div>
-
-      {selectedId && (
-        <button
-          onClick={deleteElement}
-          className="p-2 bg-primary hover:bg-primary-hover w-full rounded-md"
-        >
-          刪除選取物件
-        </button>
-      )}
     </div>
   );
 }

@@ -90,7 +90,7 @@ export default function LoginForm() {
             ${!isRegistering ? "bg-background shadow-md border-border" : "text-muted border-muted-light"}
           `}
         >
-          登入
+          Sign In
         </button>
         <button
           type="button"
@@ -100,7 +100,7 @@ export default function LoginForm() {
             ${isRegistering ? "bg-background shadow-md border-border " : "text-muted border-muted-light"}
           `}
         >
-          註冊
+          Sign Up
         </button>
       </div>
 
@@ -113,7 +113,7 @@ export default function LoginForm() {
             <MailIcon />
           </div>
           <input
-            className="px-1 pl-3"
+            className="font-mono px-1 pl-3"
             onChange={(e) => setEmail(e.target.value)}
             type="email"
             placeholder="請輸入信箱"
@@ -121,7 +121,7 @@ export default function LoginForm() {
           />
         </div>
 
-        <div className="w-full flex bg-muted-light rounded-xl overflow-hidden">
+        <div className="font-mono w-full flex bg-muted-light rounded-xl overflow-hidden">
           <div className="px-5 py-3 bg-background rounded-l-xl border-dashed border border-border">
             <KeyIcon />
           </div>
@@ -139,12 +139,12 @@ export default function LoginForm() {
           className="w-full py-3 px-6 bg-primary rounded-xl font-bold text-background cursor-pointer hover:bg-primary-hover transition duration-300 "
           type="submit"
         >
-          {loading ? "讀取中..." : isRegistering ? "註冊" : "登入"}
+          {loading ? "Loading..." : isRegistering ? "Sign Up" : "Sign In"}
         </button>
       </form>
 
       <div className="flex flex-col align-center justify-center pt-4">
-        <p>或以 Google 帳號{isRegistering ? "註冊" : "登入"}</p>
+        <p>------ Continue with Google -------</p>
         <div className="flex align-center justify-center pt-2">
           <button
             onClick={handleGoogleSubmit}

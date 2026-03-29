@@ -6,7 +6,7 @@ export default function BackgroundPanel () {
 
   return (
     <div className="text-start">
-      <p className="text-sm font-bold px-1">背景顏色</p>
+      <p className="text-sm px-1 py-1">Background Color</p>
       <ColorPicker value={background} onChange={(color) => setBackground(color)}/>
     </div>
   )

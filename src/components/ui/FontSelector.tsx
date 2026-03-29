@@ -14,7 +14,7 @@ export default function FontSelector() {
 
   const currentFontLabel =
     FONT_OPTIONS.find((f) => f.value === selectedText?.fontFamily)?.label ||
-    "選擇字型...";
+    "Select Font...";
 
   // 監聽點擊外部
   useEffect(() => {

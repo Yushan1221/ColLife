@@ -9,7 +9,7 @@ export default function PanelSwitcher() {
   const { activeTab, setActiveTab } = useCanvasStore();
 
   const cssButton =
-    "group flex justify-center items-center w-12 h-12 hover:bg-primary hover:shadow rounded-md font-bold transition duration-200";
+    "group flex justify-center items-center w-12 h-12 hover:bg-primary hover:shadow:md rounded-md font-bold transition duration-200";
   const cssIcon =
     "w-10 h-10 p-2 border border-dashed rounded-sm border-foreground transition duration-200";
 
@@ -42,13 +42,6 @@ export default function PanelSwitcher() {
         className={`${cssButton} ${activeTab === "image" ? "bg-primary shadow" : "bg-muted"}`}
       >
         <PhotoIcon className={cssIcon} />
-      </button>
-      {/* 圖層 */}
-      <button
-        onClick={() => setActiveTab("layer")}
-        className={`${cssButton} ${activeTab === "layer" ? "bg-primary shadow" : "bg-muted"}`}
-      >
-        <LayerIcon className={cssIcon} />
       </button>
     </div>
   );

@@ -12,7 +12,7 @@ const initialCanvasState: CanvasState = {
   elements: [],
   userImages: [],
   background: "#fdfbf7",
-  isNew: false,
+  isNew: true,
   isEditable: false,
   activeTab: "text",
   selectedId: null,
@@ -128,6 +128,27 @@ export const useCanvasStore = create<CanvasStore>((set) => ({
       };
     }),
 
+  // 複製元素
+  copyElement: () =>
+    set((state) => {
+      const elementToCopy = state.elements.find((el) => el.id === state.selectedId);
+      if (!elementToCopy) return state;
+
+      // 產生新 ID 並稍微偏移位置
+      const newId = `${elementToCopy.type}-${Date.now()}`;
+      const newElement: CanvasElement = {
+        ...elementToCopy,
+        id: newId,
+        x: elementToCopy.x + 20,
+        y: elementToCopy.y + 20,
+      };
+
+      return {
+        elements: [...state.elements, newElement],
+        selectedId: newId,
+      };
+    }),
+
   // 取消選取
   clearSelection: () => set({ selectedId: null }),
 
@@ -178,7 +199,7 @@ export const useCanvasStore = create<CanvasStore>((set) => ({
       return { elements: newElements };
     }),
 
-    // 下移一層
+  // 下移一層
   sendBackward: (id: string) =>
     set((state) => {
       const index = state.elements.findIndex((el) => el.id === id);

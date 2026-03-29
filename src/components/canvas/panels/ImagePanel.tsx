@@ -46,15 +46,17 @@ export default function ImagePanel({ isLoading, onRefresh }: ImagePanelProps) {
   };
 
   if (isLoading && userImages.length === 0)
-    return <div className="text-center py-10 opacity-50">載入圖片中...</div>;
+    return (
+      <div className="text-center py-10 opacity-50">Loading Images...</div>
+    );
 
   return (
-    <div className="flex flex-col gap-6 h-full justify-between">
-      <div className="grid grid-cols-2 gap-4 overflow-y-auto max-h-[60vh] p-1 custom-scrollbar">
+    <div className="h-full overflow-y-auto custom-scrollbar p-1">
+      <div className="grid grid-cols-2 gap-4">
         {/* 上傳按鈕 */}
         <div
           onClick={() => fileInputRef.current?.click()}
-          className={`cursor-pointer border-standard rounded-lg flex items-center justify-center transition min-h-[100px]
+          className={`cursor-pointer border-standard rounded-lg flex items-center justify-center transition aspect-square
             ${uploading ? "opacity-30 cursor-wait" : "opacity-50 hover:opacity-100 hover:bg-muted-light"}`}
         >
           {uploading ? (
@@ -76,28 +78,19 @@ export default function ImagePanel({ isLoading, onRefresh }: ImagePanelProps) {
         {userImages.map((image) => (
           <div
             key={image.id}
-            className="group relative cursor-pointer rounded-lg p-1 transition flex items-center justify-center border-2 border-transparent border-dashed hover:border-border overflow-hidden aspect-square"
+            className="group relative cursor-pointer rounded-lg transition flex items-center justify-center border-2 border-transparent hover:border-standard duration-300 overflow-hidden aspect-square"
             onClick={() => handleAddImage(image.url)}
           >
             <Image
               src={image.url}
               alt={image.fileName}
               fill
-              className="object-cover rounded-md group-hover:scale-105 transition duration-300"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover group-hover:scale-110 transition duration-500"
+              sizes="(max-width: 768px) 50vw, 25vw"
             />
           </div>
         ))}
       </div>
-
-      {selectedId && (
-        <button
-          onClick={deleteElement}
-          className="p-2 bg-primary hover:bg-primary-hover w-full rounded-md"
-        >
-          刪除選取物件
-        </button>
-      )}
     </div>
   );
 }

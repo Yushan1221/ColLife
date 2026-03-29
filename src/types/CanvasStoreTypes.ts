@@ -7,7 +7,7 @@ export interface CanvasState {
   background: string;
   isNew: boolean;
   isEditable: boolean;
-  activeTab: "text" | "sticker" | "background" | "image" | "layer";
+  activeTab: "text" | "sticker" | "background" | "image";
   selectedId: string | null;
 }
 
@@ -21,7 +21,7 @@ export interface CanvasActions {
   setIsNew: (isNew: boolean) => void;
   setEditable: (isEditable: boolean) => void;
   setActiveTab: (
-    tab: "text" | "sticker" | "background" | "image" | "layer",
+    tab: "text" | "sticker" | "background" | "image",
   ) => void;
   setSelectedId: (id: string | null) => void;
 
@@ -31,6 +31,7 @@ export interface CanvasActions {
   addImageElement: (url: string, width: number, height: number) => void;
   selectElement: (el: CanvasElement) => void;
   updateElement: (id: string, newAttrs: Partial<CanvasElement>) => void;
+  copyElement: () => void;
   deleteElement: () => void;
   clearSelection: () => void;
 
