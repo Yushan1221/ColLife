@@ -141,16 +141,17 @@ export default function CalendarPage() {
   }
 
   return (
-    <div className="flex max-w-5xl mx-auto items-center justify-center gap-8 h-dvh min-h-150 bg-background">
-      {/* 左側日期 */}
-      <div className="flex items-end">
-        <div className="w-[230px]">
-          <div className="grid grid-cols-4 gap-2 pb-4 text-muted">
+    <div className="flex flex-col lg:flex-row max-w-6xl mx-auto items-center justify-center gap-6 lg:gap-8 min-h-dvh py-25 px-4 lg:px-10 bg-background overflow-y-auto">
+      {/* 左側/上方：日期資訊 */}
+      <div className="flex flex-col sm:flex-row items-center lg:items-end justify-center w-full lg:w-auto">
+        <div className="w-full sm:w-[230px]">
+          {/* 月份切換網格 - 手機版 6 欄，平板以上 4 欄 */}
+          <div className="grid grid-cols-6 sm:grid-cols-4 gap-1 sm:gap-2 pb-2 sm:pb-4 text-muted mb-4 lg:mb-8">
             {MONTHS.map((m, index) => (
               <button
                 key={m}
                 onClick={() => handleMonthChange(index)}
-                className={`flex justify-center items-center text-xs py-1 font-bold rounded-md transition-colors cursor-pointer ${
+                className={`flex justify-center items-center text-[10px] sm:text-xs py-1 font-bold rounded-md transition-colors cursor-pointer ${
                   month === index
                     ? "bg-primary text-foreground shadow-sm"
                     : "bg-transparent hover:bg-muted-light"
@@ -160,49 +161,53 @@ export default function CalendarPage() {
               </button>
             ))}
           </div>
-          <div className="text-[6rem] leading-none font-black tracking-tighter text-black uppercase">
+          {/* 大月份文字 - 響應式字體大小 */}
+          <div className="text-6xl sm:text-7xl lg:text-[5rem] leading-none font-black tracking-tighter text-black uppercase text-center sm:text-left">
             {MONTHS[month]}
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-between h-40 ml-4">
-          <div className="w-12 h-12 rounded-full border-2 border-black flex items-center justify-center text-xl font-bold">
+        {/* 年份顯示 */}
+        <div className="flex sm:flex-col items-center justify-between sm:h-40 mt-4 sm:mt-0 sm:ml-4 gap-4 sm:gap-0">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-black flex items-center justify-center text-lg sm:text-xl font-bold">
             {month < 9 ? "0" + (month + 1) : month + 1}
           </div>
-          <div className="flex flex-col items-center text-3xl font-bold leading-tight">
+          <div className="flex flex-row sm:flex-col items-center text-2xl sm:text-3xl font-bold leading-tight">
             <span>{String(year).slice(0, 2)}</span>
+            <span className="sm:inline hidden"></span>
             <span>{String(year).slice(2, 4)}</span>
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 ml-4 mb-2">
+        {/* 年份切換按鈕 */}
+        <div className="flex sm:flex-col gap-2 ml-4 mt-4 sm:mt-0 sm:mb-2">
           <button
             onClick={() => handleYearChange(1)}
-            className="transition rounded-full bg-muted hover:bg-muted-light duration-300 cursor-pointer"
+            className="transition rounded-full bg-muted hover:bg-muted-light p-1 duration-300 cursor-pointer"
           >
-            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 8l-6 6h12z" />
             </svg>
           </button>
           <button
             onClick={() => handleYearChange(-1)}
-            className="transition-colors rounded-full bg-muted hover:bg-muted-light duration-300 cursor-pointer"
+            className="transition-colors rounded-full bg-muted hover:bg-muted-light p-1 duration-300 cursor-pointer"
           >
-            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 16l6-6H6z" />
             </svg>
           </button>
         </div>
       </div>
 
-      {/* 右側：日曆網格 */}
-      <div className="flex-1">
-        <div className="border-2 border-dashed bg-muted-light border-border rounded-2xl p-8 shadow-xl z-0 relative">
-          <div className="grid grid-cols-7">
+      {/* 右側/下方：日曆網格 */}
+      <div className="w-full max-w-2xl lg:flex-1">
+        <div className="border-2 border-dashed bg-muted-light border-border rounded-2xl p-4 sm:p-6 lg:p-8 shadow-xl relative">
+          <div className="grid grid-cols-7 gap-1">
             {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map((day) => (
               <div
                 key={day}
-                className="text-center text-md text-border font-bold py-2 mx-[1px] mb-1"
+                className="text-center text-[10px] sm:text-xs lg:text-md text-border font-bold py-1 sm:py-2"
               >
                 {day}
               </div>
@@ -221,17 +226,17 @@ export default function CalendarPage() {
                       dateObj.day,
                     )
                   }
-                  className="group relative h-18 m-1 p-2 border-2 border-background border-dashed rounded-2xl bg-muted-light flex flex-col items-start justify-start hover:bg-primary transition-colors cursor-pointer"
+                  className="group relative h-10 sm:h-14 lg:h-18 p-1 sm:p-2 border border-background border-dashed rounded-lg sm:rounded-2xl bg-muted-light flex flex-col items-start justify-start hover:bg-primary transition-colors cursor-pointer"
                 >
                   <span
-                    className={`text-lg font-bold z-10 ${dateObj.isCurrentMonth ? "text-foreground" : "text-muted"} group-hover:text-background`}
+                    className={`text-sm sm:text-lg font-bold z-10 ${dateObj.isCurrentMonth ? "text-foreground" : "text-muted"} group-hover:text-background`}
                   >
                     {dateObj.day}
                   </span>
 
                   {hasRecord && (
-                    <div className="absolute right-2 bottom-2 flex items-center justify-center text-primary group-hover:text-white drop-shadow-sm">
-                      <PinIcon className="w-6 h-6 animate-pulse" />
+                    <div className="absolute right-1 bottom-1 sm:right-2 sm:bottom-2 flex items-center justify-center text-primary group-hover:text-white drop-shadow-sm">
+                      <PinIcon className="w-4 h-4 sm:w-6 sm:h-6 animate-pulse" />
                     </div>
                   )}
                 </button>

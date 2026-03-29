@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import Image from "next/image";
 import { FirebaseError } from "firebase/app";
 import { useAuth } from "@/src/hooks/useAuth";
 import MailIcon from "../icons/MailIcon";
@@ -11,16 +10,14 @@ export default function LoginForm() {
   const { signIn, signUp, signInWithGoogle, closeAuthModal } = useAuth();
 
   const [isRegistering, setIsRegistering] = useState(false); // 註冊or登入 狀態
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
+  const [email, setEmail] = useState("test@collife.com");
+  const [password, setPassword] = useState("test123");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   // 處理表單送出
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    setErrorMsg("");
     setLoading(true);
 
     try {
@@ -51,7 +48,6 @@ export default function LoginForm() {
   };
 
   const handleGoogleSubmit = async () => {
-    setErrorMsg("");
     setLoading(true);
 
     try {
@@ -78,42 +74,43 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center gap-4 p-3 rounded-3xl">
-      <div
-        className="flex rounded-xl bg-muted-light my-6"
-      >
+    <div className="flex flex-col justify-center items-center gap-2 sm:gap-4 p-1 sm:p-3 rounded-3xl w-full">
+      {/* 切換 Tab */}
+      <div className="flex rounded-xl bg-muted-light my-4 sm:my-6">
         <button
           type="button"
           onClick={() => setIsRegistering(false)}
           className={`
-            px-10 py-2 rounded-l-xl font-bold text-lg cursor-pointer transition duration-300 border-dashed border
+            px-6 sm:px-10 py-2 rounded-l-xl font-bold text-base sm:text-lg cursor-pointer transition duration-300 border-dashed border
             ${!isRegistering ? "bg-background shadow-md border-border" : "text-muted border-muted-light"}
           `}
         >
-          Sign In
+          登入
         </button>
         <button
           type="button"
           onClick={() => setIsRegistering(true)}
           className={`
-            px-10 py-2 rounded-r-xl font-bold text-lg cursor-pointer transition duration-300 border-dashed border
+            px-6 sm:px-10 py-2 rounded-r-xl font-bold text-base sm:text-lg cursor-pointer transition duration-300 border-dashed border
             ${isRegistering ? "bg-background shadow-md border-border " : "text-muted border-muted-light"}
           `}
         >
-          Sign Up
+          註冊
         </button>
       </div>
 
       <form
-        className="flex flex-col items-center text-lg gap-3"
+        className="w-full flex flex-col items-center text-base sm:text-lg gap-3"
         onSubmit={handleSubmit}
       >
-        <div className="w-full flex bg-muted-light rounded-xl overflow-hidden">
-          <div className="px-5 py-3 bg-background rounded-l-xl border-dashed border border-border">
-            <MailIcon />
+        {!isRegistering && <div className="text-sm">歡迎使用測試帳號登入</div>}
+        {/* 信箱輸入 */}
+        <div className="w-full max-w-[280px] sm:max-w-none flex bg-muted-light rounded-xl overflow-hidden">
+          <div className="px-4 py-3 sm:px-5 bg-background rounded-l-xl border-dashed border border-border shrink-0">
+            <MailIcon className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
           <input
-            className="font-mono px-1 pl-3"
+            className="w-full font-mono px-1 pl-3 text-sm sm:text-base outline-none bg-transparent"
             onChange={(e) => setEmail(e.target.value)}
             type="email"
             placeholder="請輸入信箱"
@@ -121,30 +118,32 @@ export default function LoginForm() {
           />
         </div>
 
-        <div className="font-mono w-full flex bg-muted-light rounded-xl overflow-hidden">
-          <div className="px-5 py-3 bg-background rounded-l-xl border-dashed border border-border">
-            <KeyIcon />
+        {/* 密碼輸入 */}
+        <div className="w-full max-w-[280px] sm:max-w-none flex bg-muted-light rounded-xl overflow-hidden">
+          <div className="px-4 py-3 sm:px-5 bg-background rounded-l-xl border-dashed border border-border shrink-0">
+            <KeyIcon className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
           <input
-            className="px-1 pl-3"
+            className="w-full font-mono px-1 pl-3 text-sm sm:text-base outline-none bg-transparent"
             onChange={(e) => setPassword(e.target.value)}
             type="password"
-            placeholder="請輸入密碼（6個字以上）"
+            placeholder="請輸入密碼(6碼以上)"
             minLength={6}
             required
           />
         </div>
 
+        {/* 送出按鈕 */}
         <button
-          className="w-full py-3 px-6 bg-primary rounded-xl font-bold text-background cursor-pointer hover:bg-primary-hover transition duration-300 "
+          className="w-full max-w-[280px] sm:max-w-none py-3 px-6 bg-primary rounded-xl font-bold text-background cursor-pointer hover:bg-primary-hover transition duration-300 mt-2"
           type="submit"
         >
-          {loading ? "Loading..." : isRegistering ? "Sign Up" : "Sign In"}
+          {loading ? "Loading..." : isRegistering ? "註冊" : "登入"}
         </button>
       </form>
 
-      <div className="flex flex-col align-center justify-center pt-4">
-        <p>------ Continue with Google -------</p>
+      <div className="flex flex-col items-center justify-center pt-4 w-full">
+        <p className="text-xs sm:text-sm">------ 或以 Google 帳號{isRegistering ? "註冊" : "登入"} -------</p>
         <div className="flex align-center justify-center pt-2">
           <button
             onClick={handleGoogleSubmit}
@@ -152,7 +151,7 @@ export default function LoginForm() {
             className="p-1 rounded-sm border-dashed border border-background hover:border-border hover:shadow-md transition duration-300 cursor-pointer"
           >
             <svg
-              className="w-10 h-10"
+              className="w-8 h-8 sm:w-10 sm:h-10"
               viewBox="0 0 59 59"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"

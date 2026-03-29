@@ -10,8 +10,8 @@ export default function UserBox() {
 
   return (
     <div className="relative group">
-      <button className="flex justify-center items-center rounded-full bg-primary w-10 h-10 border border-border border-dashed cursor-pointer text-background">
-        <UserIcon />
+      <button className="flex justify-center items-center rounded-full bg-primary sm:w-10 sm:h-10 w-8 h-8 border border-border border-dashed cursor-pointer text-background">
+        <UserIcon className="sm:w-6 sm:h-6 h-4 w-4" />
       </button>
 
       {/* 透明外框讓連接部分不會脫離hover */}

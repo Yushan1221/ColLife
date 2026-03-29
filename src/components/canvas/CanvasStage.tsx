@@ -59,7 +59,7 @@ export default function CanvasStage() {
   useKeyboardDelete();
 
   return (
-    <div ref={containerRef} className="bg-background flex-1 w-full overflow-hidden">
+    <div ref={containerRef} className="bg-background flex-1 w-full overflow-hidden shadow-lg">
       <Stage
         width={dimensions.width}
         height={dimensions.height}

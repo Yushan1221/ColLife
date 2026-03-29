@@ -1,17 +1,17 @@
 'use client';
-import Image from "next/image";
+
 import { useAuth } from "../hooks/useAuth";
+import LoadingPage from "@/src/components/loading/LoadingPage";
+import HeroSection from "@/src/components/home/HeroSection";
 
 export default function HomePage() {
-  const { loading } = useAuth();
+  const { loading: authLoading } = useAuth();
 
-  if (loading) return <div className="flex justify-center item-center p-10">讀取中...</div>;
+  if (authLoading) return <LoadingPage />;
   
   return (
-    <div className="flex min-h-screen items-center justify-center font-sans">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 sm:items-start">
-        <p>Homepage</p>
-      </main>
+    <div className="w-full flex flex-col items-center justify-center">
+      <HeroSection />
     </div>
   );
 }

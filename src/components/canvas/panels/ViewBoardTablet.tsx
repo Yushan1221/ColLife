@@ -7,7 +7,7 @@ import DeleteIcon from "../../icons/DeleteIcon";
 import { deleteCanvas } from "@/src/utils/canvasOperations";
 import { useAuth } from "@/src/hooks/useAuth";
 
-export default function ViewBoard() {
+export default function ViewBoardTablet() {
   const router = useRouter();
   const params = useParams();
   const { user } = useAuth();
@@ -36,39 +36,37 @@ export default function ViewBoard() {
   };
 
   const cssButton =
-    "group w-28 h-28 rounded-2xl shadow transition-colors duration-300 hover:shadow-md flex justify-center items-center";
+    "group p-1 rounded-lg shadow transition-colors duration-300 hover:shadow-md flex justify-center items-center";
 
   const cssBorder =
-    "w-24 h-24 border border-foreground border-dashed rounded-xl flex flex-col justify-center items-center gap-2";
+    "sm:px-3 sm:py-2 px-2 py-1 border border-foreground border-dashed rounded-md flex items-center sm:gap-2 gap-1";
 
   return (
-    <div className="lg:flex hidden flex-1 justify-center items-center">
-      <div className="grid grid-cols-2 grid-rows-2 gap-5">
-        <button onClick={() => setEditable(true)} className={`${cssButton} bg-primary hover:bg-primary-hover`}>
+    <div className="lg:hidden flex flex-1 justify-center items-center sm:gap-2 gap-1 flex-wrap">
+        <button onClick={() => setEditable(true)} className={`${cssButton} bg-primary hover:bg-primary-hover sm:block hidden`}>
           <div className={cssBorder}>
-            <PenToolIcon />
-            <div className="text-sm">Edit</div>
+            <PenToolIcon className="w-4 h-4" />
+            <div className="sm:text-sm text-xs font-medium">Edit</div>
           </div>
         </button>
         <button className={`${cssButton} bg-secondary hover:bg-secondary-hover`}>
           <div className={cssBorder}>
-            <DownloadIcon />
-            <div className="text-sm">Export</div>
+            <DownloadIcon className="w-4 h-4" />
+            <div className="sm:text-sm text-xs font-medium">Export</div>
           </div>
         </button>
         <button onClick={pushToCalender} className={`${cssButton} bg-muted hover:bg-acent`}>
           <div className={cssBorder}>
-            <CalendarIcon />
-            <div className="text-sm">Calendar</div>
+            <CalendarIcon className="w-4 h-4" />
+            <div className="sm:text-sm text-xs font-medium">Calendar</div>
           </div>
         </button>
         <button onClick={handleDelete} className={`${cssButton} bg-error hover:bg-error-hover`}>
           <div className={cssBorder}>
-            <DeleteIcon />
-            <div className="text-sm">Delete</div>
+            <DeleteIcon className="w-4 h-4" />
+            <div className="sm:text-sm text-xs font-medium">Delete</div>
           </div>
         </button>
-      </div>
     </div>
   );
 }

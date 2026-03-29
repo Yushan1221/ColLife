@@ -13,10 +13,10 @@ export default function TextPanel() {
   ) as TextElement | undefined;
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 ">
       <button
         onClick={addTextElement}
-        className="py-2 w-full bg-primary hover:bg-primary-hover rounded-md"
+        className="py-2 w-full bg-primary hover:bg-primary-hover rounded-md "
       >
         <span className="font-bold pr-3">T</span> Add Text
       </button>

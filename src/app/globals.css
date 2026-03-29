@@ -21,6 +21,7 @@
 
   --border: #776b5d;
   --acent: #b0a695;
+  --neutral: #DED1BA;
 
   --muted: #b99470;
   --muted-light: #ebe3d5;
@@ -66,6 +67,7 @@
 
   --color-border: var(--border);
   --color-acent: var(--acent);
+  --color-neutral: var(--neutral);
 
   --color-muted: var(--muted);
   --color-muted-light: var(--muted-light);

@@ -26,6 +26,10 @@ export const metadata: Metadata = {
   description: "Interactive Web-based Digital Diary",
 };
 
+import Footer from "../components/ui/Footer";
+
+// ... (中間保持不變)
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -42,11 +46,14 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${QLDHand.className} ${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${QLDHand.className} ${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
         <AuthProvider>
           <NavBar />
-          {children}
+          <main className="flex-grow">
+            {children}
+          </main>
+          <Footer />
           <AuthModal />
         </AuthProvider>
       </body>
