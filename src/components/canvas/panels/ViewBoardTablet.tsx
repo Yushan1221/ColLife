@@ -60,7 +60,7 @@ export default function ViewBoardTablet() {
     "sm:px-3 sm:py-2 px-2 py-1 border border-foreground border-dashed rounded-md flex items-center sm:gap-2 gap-1";
 
   return (
-    <div className="lg:hidden flex flex-1 justify-center items-center sm:gap-2 gap-1 flex-wrap">
+    <div className="z-20 lg:hidden flex flex-1 justify-center items-center sm:gap-2 gap-1 flex-wrap">
         <button onClick={() => setEditable(true)} className={`${cssButton} bg-primary hover:bg-primary-hover sm:block hidden`}>
           <div className={cssBorder}>
             <PenToolIcon className="w-4 h-4" />
