@@ -18,10 +18,11 @@ const VIRTUAL_WIDTH = 450;
 const VIRTUAL_HEIGHT = 600;
 
 export default function CanvasStage() {
-  const { elements, background, clearSelection } = useCanvasStore();
+  const { elements, background, clearSelection, setStageRef } = useCanvasStore();
 
   // 用來抓取外層容器的寬度
   const containerRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<any>(null);
   
   // 記錄算出來的實際寬高與縮放比例
   const [dimensions, setDimensions] = useState({
@@ -29,6 +30,12 @@ export default function CanvasStage() {
     height: VIRTUAL_HEIGHT,
     scale: 1,
   });
+
+  useEffect(() => {
+    if (stageRef.current) {
+      setStageRef(stageRef.current);
+    }
+  }, [setStageRef]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -61,6 +68,7 @@ export default function CanvasStage() {
   return (
     <div ref={containerRef} className="bg-background flex-1 w-full overflow-hidden shadow-lg">
       <Stage
+        ref={stageRef}
         width={dimensions.width}
         height={dimensions.height}
         scaleX={dimensions.scale}

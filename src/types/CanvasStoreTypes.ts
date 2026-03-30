@@ -9,6 +9,7 @@ export interface CanvasState {
   isEditable: boolean;
   activeTab: "text" | "sticker" | "background" | "image";
   selectedId: string | null;
+  stageRef: any | null;
 }
 
 export interface CanvasActions {
@@ -24,6 +25,7 @@ export interface CanvasActions {
     tab: "text" | "sticker" | "background" | "image",
   ) => void;
   setSelectedId: (id: string | null) => void;
+  setStageRef: (ref: any) => void;
 
   // canvas operations
   addTextElement: () => void;

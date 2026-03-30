@@ -11,12 +11,30 @@ export default function ViewBoardTablet() {
   const router = useRouter();
   const params = useParams();
   const { user } = useAuth();
-  const { setEditable } = useCanvasStore();
+  const { setEditable, stageRef } = useCanvasStore();
 
   const date = params.date as string;
 
   const pushToCalender = () => {
     router.push("/calendar");
+  };
+
+  const handleExport = () => {
+    if (!stageRef) {
+      alert("尚未準備好畫布，請稍後再試。");
+      return;
+    }
+
+    const dataURL = stageRef.toDataURL({
+      pixelRatio: 2,
+    });
+
+    const link = document.createElement("a");
+    link.download = `collife-${date}.png`;
+    link.href = dataURL;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const handleDelete = async () => {
@@ -49,7 +67,7 @@ export default function ViewBoardTablet() {
             <div className="sm:text-sm text-xs font-medium">Edit</div>
           </div>
         </button>
-        <button className={`${cssButton} bg-secondary hover:bg-secondary-hover`}>
+        <button onClick={handleExport} className={`${cssButton} bg-secondary hover:bg-secondary-hover`}>
           <div className={cssBorder}>
             <DownloadIcon className="w-4 h-4" />
             <div className="sm:text-sm text-xs font-medium">Export</div>

@@ -16,6 +16,7 @@ const initialCanvasState: CanvasState = {
   isEditable: false,
   activeTab: "text",
   selectedId: null,
+  stageRef: null,
 };
 
 export const useCanvasStore = create<CanvasStore>((set) => ({
@@ -29,6 +30,7 @@ export const useCanvasStore = create<CanvasStore>((set) => ({
   setEditable: (isEditable) => set({ isEditable }),
   setActiveTab: (activeTab) => set({ activeTab }),
   setSelectedId: (selectedId) => set({ selectedId }),
+  setStageRef: (stageRef) => set({ stageRef }),
 
   // canvas operations
   // 新增文字元件
