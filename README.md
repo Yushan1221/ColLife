@@ -1,36 +1,147 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# [ColLife - 數位拼貼日記平台](https://collife.vercel.app/)
 
-## Getting Started
+[ColLife](https://collife.vercel.app/) 是一款支援全自由佈局的數位拼貼日記平台。它提供直覺的畫布介面，讓使用者能透過文字、貼圖及個人照片，將日常生活點滴轉化為獨一無二的視覺日記。
 
-First, run the development server:
+![首頁畫面](/public/sample/hero.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+![首頁畫面](/public/sample/RWD.png)
+
+### 測試帳號
+| 帳號 | 密碼 |
+| :--- | :--- |
+| test@collife.com | test123 |
+
+## 目錄
+- [ColLife - 數位拼貼日記平台](#ColLife-數位拼貼日記平台)
+   - [目錄](#目錄)
+   - [核心功能](#核心功能)
+      - [互動式拼貼畫布](#互動式拼貼畫布)
+      - [個人化日誌管理](#個人化日誌管理)
+      - [使用者同步與安全](#使用者同步與安全)
+   - [技術架構](#技術架構)
+   - [流程細節](#流程細節)
+      - [第一步：建立帳號與登入](#第一步建立帳號與登入)
+      - [第二步：挑選創作日期](#第二步挑選創作日期)
+      - [第三步：開始拼貼創作](#第三步開始拼貼創作)
+      - [第四步：瀏覽與回顧](#第四步瀏覽與回顧)
+   - [專案結構](#專案結構)
+   - [快速開始](#快速開始)
+   - [聯絡我](#聯絡我)
+
+## 核心功能
+
+### 互動式拼貼畫布
+| 編輯種類 | 實作功能 |
+|:---: | :--- |
+| 背景 |  ◈ 背景顏色切換 |
+| 文字框 | ◈ 自由新增刪減多個文字框<br>◈ 旋轉文字框<br>◈ 內容自由撰寫刪減<br>◈ 多種字體樣式切換<br>◈ 字體大小切換<br>◈ 字體顏色切換<br>◈ 粗體/斜體切換 |
+| 貼紙區 | ◈ 多種分類貼紙提供選擇<br>◈ 一鍵新增刪除貼紙<br>◈ 旋轉貼紙<br>◈ 放大縮小貼紙 |
+| 圖片 | ◈ 支援由客戶端上傳圖片<br>◈ 雲端儲存圖片<br>◈ 一鍵新增刪除圖片<br>◈ 旋轉圖片<br>◈ 放大縮小圖片 |
+
+除了個別功能，每種素材皆有**複製**與**圖層切換**功能。
+
+### 個人化日誌管理
+| 功能 | 功能介紹 |
+| :---: | :--- |
+| 日期索引系統 | 透過直觀的月曆介面管理與檢視不同日期的拼貼作品。|
+| 雲端日誌儲存 | 雲端保存已紀錄的畫布，並在月曆頁面標記於對應日期，直觀明瞭。 |
+
+
+### 使用者同步與安全
+| 功能 | 功能介紹 |
+| :---: | :--- |
+| 安全登入 | 整合 Firebase Authentication，提供順暢的註冊與登入體驗。|
+| 資料持久化 | 畫布狀態與使用者素材自動同步至 Firestore 與 Firebase Storage。 |
+
+## 技術架構
+
+| 分類 | 技術工具 | 
+| :--- | :--- | 
+| **核心開發** | Next.js (App Router), React, TypeScript |
+| **畫布引擎** | React-Konva (Konva.js) |
+| **狀態管理** | Zustand, React Context |
+| **介面與樣式** | Tailwind CSS, Shadcn UI |
+| **動態效果** | Framer Motion |
+| **雲端服務** | Firebase (Auth, Firestore, Storage) |
+| **部署** | Vercel |
+| **版本控制** | Git/GitHub |
+
+## 流程細節
+
+### 第一步：建立帳號與登入
+![建立帳號與登入](/public/sample/login.png)
+
+使用者可以透過首頁的認證系統進行註冊或登入。登入後，系統將為每位使用者建立獨立的數位日記本，確保資料的隱私性。
+
+### 第二步：挑選創作日期
+![挑選創作日期](/public/sample/calendar.gif)
+
+進入日曆頁面，使用者可以自由切換月份與年份。
+-   **日期標記**：已經撰寫過日記的日期會顯示「圖釘」圖示。
+-   **進入畫布**：點擊任意日期即可進入該日期的專屬畫布空間。
+
+### 第三步：開始拼貼創作
+![開始拼貼創作](/public/sample/edit.gif)
+
+在畫布頁面點擊「**Edit**」按鈕進入創作模式：
+1.  **添加素材**：從側邊欄選擇貼圖、文字或上傳個人照片。
+2.  **自由排版**：拖拽素材調整位置，使用變形控制點進行縮放或旋轉。
+3.  **調整背景**：切換不同風格的紙張紋理或顏色背景。
+4.  **圖層控制**：可以精確調整每個素材的前後關係，互相堆疊製造層次設計。
+5.  **儲存畫布**：調整完畢後按下「**Save**」按鈕即可儲存畫布，專屬您的拼貼日記便完成。
+
+### 第四步：瀏覽與回顧
+![瀏覽與回顧](/public/sample/view.gif)
+
+-  **瀏覽日記**：使用者可以使用左右箭頭快速翻閱相鄰日期的拼貼日記，享受如同翻閱實體手帳般的體驗。
+-  **輸出分享**：可將拼貼日記輸出為 PNG 格式的圖片，分享給朋友。
+-  **刪除畫布**：如果要捨棄當日設計，也可以直接使用「**Delete**」按鈕來刪除整張畫布。
+
+
+## 專案結構
+
+```text
+src/
+├── app/             # Next.js 路由與頁面組件
+├── components/      # UI 與功能組件
+│   ├── canvas/      # 畫布核心邏輯 (舞台、元素、側邊面板)
+│   ├── auth/        # 身分驗證相關組件
+│   └── ui/          # 通用可重用 UI 組件
+├── context/         # React Context
+├── hooks/           # 自定義 Hooks (鍵盤快捷鍵、導覽邏輯)
+├── lib/             # 第三方庫配置 (Firebase, 常數定義)
+├── store/           # Zustand 狀態管理中心
+├── types/           # TypeScript 類型定義
+├── utils/           # 工具函式 (畫布運算、影像處理)
+└── public/          # 靜態資源 (貼圖、圖示、背景圖)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 快速開始
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **複製專案庫**
+   ```bash
+   git clone https://github.com/your-username/collife.git
+   cd collife
+   ```
 
-## Learn More
+2. **安裝依賴項目**
+   ```bash
+   npm install
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+3. **環境變數配置**
+   在根目錄建立 `.env.local` 檔案，並加入您的 Firebase 配置參數。
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. **啟動開發伺服器**
+   ```bash
+   npm run dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 聯絡我
+如果您對此項目有任何疑問，歡迎您透過以下方式與我聯絡：
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Email: selene32317@gmail.com
